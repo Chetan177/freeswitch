@@ -279,7 +279,9 @@ struct switch_media_handle_s {
 
 switch_srtp_crypto_suite_t SUITES[CRYPTO_INVALID] = {
 	{ "AEAD_AES_256_GCM_8", "", AEAD_AES_256_GCM_8, 44, 12},
+	{ "AEAD_AES_256_GCM", "", AEAD_AES_256_GCM, 44, 12},
 	{ "AEAD_AES_128_GCM_8", "", AEAD_AES_128_GCM_8, 28, 12},
+	{ "AEAD_AES_128_GCM", "", AEAD_AES_128_GCM, 28, 12},
 	{ "AES_256_CM_HMAC_SHA1_80", "AES_CM_256_HMAC_SHA1_80", AES_CM_256_HMAC_SHA1_80, 46, 14},
 	{ "AES_192_CM_HMAC_SHA1_80", "AES_CM_192_HMAC_SHA1_80", AES_CM_192_HMAC_SHA1_80, 38, 14},
 	{ "AES_CM_128_HMAC_SHA1_80", "", AES_CM_128_HMAC_SHA1_80, 30, 14},
@@ -14040,7 +14042,9 @@ SWITCH_DECLARE (void) switch_core_media_recover_session(switch_core_session_t *s
 
 SWITCH_DECLARE(void) switch_core_media_init(void)
 {
-	switch_core_gen_certs(DTLS_SRTP_FNAME ".pem");
+	if (switch_core_check_dtls_pem(DTLS_SRTP_FNAME ".pem") != SWITCH_TRUE) {
+		switch_core_gen_certs(DTLS_SRTP_FNAME ".pem");
+	}
 
 	video_globals.cpu_count = switch_core_cpu_count();
 	video_globals.cur_cpu = 0;
